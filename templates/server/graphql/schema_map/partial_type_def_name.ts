@@ -1,1 +1,0 @@
-const partialTypeDefName = `{{VAR:LOWERCASE_OBJECT_NAME}}TypeDef`;
