@@ -56,7 +56,7 @@ function getPartialForObjectProperties(key: string, value: string, objectName: s
 
 function getPropertyModelType(value: string): string {
 	const type = removeBrackets(removeExMark(value));
-	if (value === 'ObjectId') {
+	if (type === 'ObjectId') {
 		return 'mongoose.Schema.Types.ObjectId'
 	}
 	return type;

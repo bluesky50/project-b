@@ -1,7 +1,26 @@
 export const objectNames = [
-	'Post',
-	'Comment',
-	'User'
+	'Announcement',
+	'Circle',
+	'CircleMeeting',
+	'CircleMeetingInput',
+	'Notification',
+	'Poll',
+	'Project',
+	'ProjectNote',
+	'ProjectPeopleData',
+	'ProjectPost',
+	'ProjectRefData',
+	'Role',
+	'SkillDomain',
+	'SkillSet',
+	'SkillUnit',
+	'User',
+	'UserFollowsData',
+	'UserInterest',
+	'UserOrgData',
+	'UserPost',
+	'UserProfileData',
+	'UserSkillsData'
 ];
 
 // Options: Number, String, ObjectId, [ObjectId]

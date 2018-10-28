@@ -8,9 +8,9 @@ import { lowerCaseFirstLetter } from '../../../../utils/stringUtils';
 import { IArgs } from '../../../../interfaces/IArgs';
 
 const typeDefsJoin = "const TypeDefs: string = `\n${types.join(REPLACE_WITH_NEW_LINE)}\n`;";
-const queriesJoin = "const QueryDef: string = `\ntype Query {\n${queries.join(REPLACE_WITH_NEW_LINE')}\n}\n`;";
-const mutationsJoin = "const MutationDef: string = `\ntype Mutation {\n${mutations.join('\n')}\n}\n`;";
-const subscriptionsJoin = "const SubscriptionDef: string = `\ntype Subscription {\n${subscriptions.join('\n')}\n}\n`;";
+const queriesJoin = "const QueryDef: string = `\ntype Query {\n${queries.join(REPLACE_WITH_NEW_LINE)}\n}\n`;";
+const mutationsJoin = "const MutationDef: string = `\ntype Mutation {\n${mutations.join(REPLACE_WITH_NEW_LINE)}\n}\n`;";
+const subscriptionsJoin = "const SubscriptionDef: string = `\ntype Subscription {\n${subscriptions.join(REPLACE_WITH_NEW_LINE)}\n}\n`;";
 
 export const templateGqlSchemaMap =  
 `import _ from 'lodash';

@@ -1,11 +1,17 @@
+import dataModel from '../../output/nexusDataModel';
+import serverInfo from '../configs/serverBuilderConfig';
+
 import * as Builder from '../builders/buildServerFiles';
 
+const args = {
+	serverInfo,
+	dataModel
+}
 
-Builder.buildClasseFiles();
-Builder.buildConfigFiles();
-Builder.buildLibFiles();
-Builder.buildUtilFiles();
-
-Builder.buildGqlFiles();
-Builder.buildInterfaceFiles();
-Builder.buildDataModelFiles();
+Builder.buildClasseFiles(args);
+Builder.buildConfigFiles(args);
+Builder.buildLibFiles(args);
+Builder.buildUtilFiles(args);
+Builder.buildGqlFiles(args);
+Builder.buildInterfaceFiles(args);
+Builder.buildDataModelFiles(args);

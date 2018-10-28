@@ -1,5 +1,3 @@
-import dataModel from '../configs/dataModelConfig';
-import serverInfo from '../configs/serverBuilderConfig';
 import { IArgs } from '../interfaces/IArgs';
 import { templateBuilder } from './templateBuilders';
 
@@ -48,10 +46,11 @@ import { writeFileWithExistsCheck, mkdirp, pathExists } from '../utils/fileUtils
  * - Utils
  */
 
-const fileOutputPath = './output/src';
+const fileOutputPath = './output/srcNexus';
 const defaultFileExtension = '.ts';
 
-export function buildClasseFiles() {
+export function buildClasseFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null, // Dictionary not required for class files
@@ -82,7 +81,8 @@ export function buildClasseFiles() {
 	});
 }
 
-export function buildConfigFiles() {
+export function buildConfigFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null, // Dictionary not required for class files
@@ -118,7 +118,8 @@ export function buildConfigFiles() {
 	writeFileWithExistsCheck(path + '/serverConfig' + defaultFileExtension, templateBuilder(serverConfigArgs));
 }
 
-export function buildLibFiles() {
+export function buildLibFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null, // Dictionary not required for class files
@@ -149,7 +150,8 @@ export function buildLibFiles() {
 	});
 }
 
-export function buildUtilFiles() {
+export function buildUtilFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null, // Dictionary not required for class files
@@ -180,7 +182,8 @@ export function buildUtilFiles() {
 	});
 }
 
-export function buildDataModelFiles() {
+export function buildDataModelFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: templateMongooseModel,
 		templateDictionary: dictionaryMongooseModel,
@@ -201,7 +204,7 @@ export function buildDataModelFiles() {
 		mkdirp(path);
 	}
 
-	dataModel.dataObjects.forEach((object) => {
+	dataModel.dataObjects.forEach((object: any) => {
 		const args = {
 			...defaultArgs,
 			dataModelInfo: {
@@ -213,7 +216,8 @@ export function buildDataModelFiles() {
 	});
 }
 
-export function buildGqlFiles() {
+export function buildGqlFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null,
@@ -247,7 +251,7 @@ export function buildGqlFiles() {
 	}
 	writeFileWithExistsCheck(path + '/resolvers' + defaultFileExtension,templateBuilder(gqlResolverArgs));
 
-	dataModel.dataObjects.forEach((object) => {
+	dataModel.dataObjects.forEach((object: any) => {
 	
 		const typeResolverArgs = {
 			...defaultArgs,
@@ -265,7 +269,7 @@ export function buildGqlFiles() {
 			mkdirp(objectPath);
 		}
 
-		writeFileWithExistsCheck(objectPath + '/typeDef' + defaultFileExtension, templateBuilder(typeResolverArgs));
+		writeFileWithExistsCheck(objectPath + '/resolvers' + defaultFileExtension, templateBuilder(typeResolverArgs));
 
 		const typeDefArgs = {
 			...defaultArgs,
@@ -276,11 +280,12 @@ export function buildGqlFiles() {
 				objectSchema: object.schema
 			}
 		}
-		writeFileWithExistsCheck(objectPath + '/resolvers' + defaultFileExtension, templateBuilder(typeDefArgs));
+		writeFileWithExistsCheck(objectPath + '/typeDef' + defaultFileExtension, templateBuilder(typeDefArgs));
 	});
 }
 
-export function buildInterfaceFiles() {
+export function buildInterfaceFiles(args: { serverInfo: any, dataModel: any }) {
+	const { serverInfo, dataModel } = args;
 	const defaultArgs: IArgs = {
 		template: '',
 		templateDictionary: null,
@@ -327,7 +332,7 @@ export function buildInterfaceFiles() {
 		writeFileWithExistsCheck(gqlFilesPath + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
 	})
 
-	dataModel.dataObjects.forEach((object) => {
+	dataModel.dataObjects.forEach((object: any) => {
 		const args = {
 			...defaultArgs,
 			template: templateObjectInterface,

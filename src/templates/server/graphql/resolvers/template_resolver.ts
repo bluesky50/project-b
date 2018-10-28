@@ -3,7 +3,7 @@ export const templateResolvers =
 import { createResolver } from 'apollo-resolvers';
 import { UnknownError, ForbiddenError, AuthenticationRequiredError, AlreadyAuthenticatedError } from '../lib/errors';
 import { generateRoleCheckResolver } from '../utils/resolverHelpers';
-import IResolverContext from '../interfaces/class/IResolverContext';
+import IResolverContext from '../interfaces/gql/IResolverContext';
 
 export const baseResolver: any = createResolver(
 	null,
