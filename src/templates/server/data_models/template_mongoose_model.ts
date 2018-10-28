@@ -1,13 +1,14 @@
 import { containsExMark, removeExMark, containsBrackets, removeBrackets } from '../../../utils/stringUtils';
-import { getAllInserts, getInsertText } from '../../../utils/templateParserUtils';
+import { getAllInserts, getInsertText, getInsertCount, getAllInsertsRegex } from '../../../utils/templateParserUtils';
 import GenericPropTemplate from './partial_mongoose_schema_generic_property';
 import StringPropTemplate from './partial_mongoose_schema_string_property';
 import ObjectPropTemplate from './partial_mongoose_schema_object_property';
 import ArrayPropTemplate from './partial_mongoose_schema_object_array_property';
 import { IArgs } from '../../../interfaces/IArgs';
+import { insertBracketsRegex } from '../../../constants/matchingPattern';
 
 export const templateMongooseModel = `import mongoose from 'mongoose';
-import I{{DYNAMIC:OBJECT_NAME}} from '../interaces/models/I{{DYNAMIC:OBJECT_NAME}}';
+import I{{DYNAMIC:OBJECT_NAME}} from '../interfaces/models/I{{DYNAMIC:OBJECT_NAME}}';
 
 export interface I{{DYNAMIC:OBJECT_NAME}}Document extends mongoose.Document, I{{DYNAMIC:OBJECT_NAME}} {}
 
@@ -36,16 +37,19 @@ function createMongooseSchemaProperties(args: IArgs): string {
 	const cache: any[] = [];
 
 	Object.entries(args.dataModelInfo.objectSchema).forEach(([key, value]) => {
-		const objectPropertyPartial = getPartialForObjectProperties(key, value);
+		const objectPropertyPartial = getPartialForObjectProperties(key, value, args.dataModelInfo.objectName);
 		cache.push(objectPropertyPartial)
 	});
 	return cache.join(',\n');
 }
 
-function getPartialForObjectProperties(key: string, value: string): any {
-	const dictionary = getDictionaryForModelTemplate(key, value);
+function getPartialForObjectProperties(key: string, value: string, objectName: string): any {
+	const dictionary = getDictionaryForModelTemplate(key, value, objectName);
+	// console.log(dictionary);
 	const template = getModelTemplate(value);
+	// console.log(template);
 	const result = basicPartialBuilderForVars(template, dictionary);
+	// console.log(result);
 	return result;
 }
 
@@ -58,13 +62,14 @@ function getPropertyModelType(value: string): string {
 	return type;
 }
 
-function getDictionaryForModelTemplate(key: string, value: string): any {
+function getDictionaryForModelTemplate(key: string, value: string, objectName: string) : any {
 	const required: boolean = containsExMark(value);
-	const property = key.toLowerCase();
+	const property = key;
 	const dict = {
 		'VAR:REQUIRED_VALUE': required.toString(),
 		'VAR:PROPERTY_NAME': property,
-		'VAR:PROPERTY_TYPE': getPropertyModelType(value)
+		'VAR:PROPERTY_TYPE': getPropertyModelType(value),
+		'DYNAMIC:OBJECT_NAME': objectName,
 	}
 	return dict;
 }
@@ -83,6 +88,7 @@ function getModelTemplate(value: string): string {
 		// }
 		return ArrayPropTemplate;
 	} else {
+
 		switch(value) {
 			case 'String':
 				return StringPropTemplate;
@@ -104,6 +110,7 @@ function basicPartialBuilderForVars(template: string, dictionary: any): string {
 	let result = template;
 	const inserts = getAllInserts(template);
 	inserts.forEach((insert) => {
+		// console.log(insert);
 		const insertText = getInsertText(insert);
 		result = result.replace(new RegExp(insert, 'g'), dictionary[insertText]);
 	});

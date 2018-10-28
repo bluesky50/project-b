@@ -2,7 +2,7 @@ export const templateResolverHelpers =
 `import { createResolver } from 'apollo-resolvers';
 import { isAuthenticatedResolver } from '../gql/resolvers';
 import { ForbiddenError } from '../lib/errors';
-import IResolverContext from '../interfaces/IResolverContext';
+import IResolverContext from '../interfaces/gql/IResolverContext';
 
 export function generateRoleCheckResolver(roleTitle: string) {
 	return isAuthenticatedResolver.createResolver((parent: any, args: {}, context: IResolverContext) => {

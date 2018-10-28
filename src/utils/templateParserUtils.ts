@@ -1,4 +1,4 @@
-import { insertBracketsRegex, insertSplitChar } from '../constants/matchingPattern';
+import { insertBracketsRegex, insertSplitChar, handlebarInsertsRegex } from '../constants/matchingPattern';
 
 export function getAllInsertsRegex(str: string, pattern: RegExp): Array<string> {
 	const results =  str.match(pattern);
@@ -6,7 +6,7 @@ export function getAllInsertsRegex(str: string, pattern: RegExp): Array<string> 
 }
 
 export function getAllInserts(str: string): Array<string> {
-	const results = str.match(insertBracketsRegex);
+	const results = str.match(handlebarInsertsRegex);
 	return results ? results : [];
 }
 

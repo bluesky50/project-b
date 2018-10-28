@@ -14,7 +14,7 @@ export default I{{DYNAMIC:OBJECT_NAME}};
 
 export const dictionaryObjectInterface = {
 	'DYNAMIC:OBJECT_NAME': getObjectName,
-	'DYNAMIC:INTERFACE_OBJECT_PROPERTIES': '',
+	'DYNAMIC:INTERFACE_OBJECT_PROPERTIES': getObjectProperties,
 	'PARTIAL:OBJECT_PROPERTY_ENTRY': partialObjectInterfaceProperties
 }
 

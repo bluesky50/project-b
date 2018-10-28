@@ -11,8 +11,8 @@ import { applyMiddleware, addGraphQLRoute } from '../utils/serverInitHelpers';
 import { normalizePort, onError, onListening } from '../utils/serverHelpers';
 
 import debug from '../lib/debugger';
-import IServer from '../interfaces/IServer';
-import IOrmAdapter from '../interfaces/IOrmAdapter';
+import IServer from '../interfaces/class/IServer';
+import IOrmAdapter from '../interfaces/class/IOrmAdapter';
 
 export class Server implements IServer {
 	public app: Koa;

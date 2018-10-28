@@ -39,7 +39,7 @@ import { templateResolverHelpers } from '../templates/server/other/template_reso
 import { templateServerHelpers } from '../templates/server/other/template_server_helper';
 import { templateTokenHelpers } from '../templates/server/other/template_token_helpers';
 
-import { writeFileWithExistsCheck, mkdirp, pathExists, normalizePath } from '../utils/fileUtils';
+import { writeFileWithExistsCheck, mkdirp, pathExists } from '../utils/fileUtils';
 /**
  * Template Building Functions for files that do not rely on data model objects.
  * - Classes
@@ -65,7 +65,7 @@ export function buildClasseFiles() {
 		}
 	}
 
-	const outputDir = '/Classes';
+	const outputDir = '/classes';
 	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
 	const path = fileOutputPath + outputDir;
 	if (!pathExists(path)) {
@@ -96,7 +96,7 @@ export function buildConfigFiles() {
 		}
 	}
 
-	const outputDir = '/Config';
+	const outputDir = '/configs';
 	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
 	const path = fileOutputPath + outputDir;
 	if (!pathExists(path)) {
@@ -163,14 +163,14 @@ export function buildUtilFiles() {
 		}
 	}
 
-	const outputDir = '/Utils'
+	const outputDir = '/utils'
 	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
 	const path = fileOutputPath + outputDir;
 	if (!pathExists(path)) {
 		mkdirp(path);
 	}
 
-	const utilTemplates = [{template: templateInitServerHelpers, fileName: 'initServerHelpers'}, {template: templateResolverHelpers, fileName: 'resolverHelpers'}, {template: templateServerHelpers, fileName: 'serverHelpers'}, {template: templateTokenHelpers, fileName: 'tokenHelpers'}];
+	const utilTemplates = [{template: templateInitServerHelpers, fileName: 'serverInitHelpers'}, {template: templateResolverHelpers, fileName: 'resolverHelpers'}, {template: templateServerHelpers, fileName: 'serverHelpers'}, {template: templateTokenHelpers, fileName: 'tokenHelpers'}];
 	utilTemplates.forEach((entry) => {
 		const args = {
 			...defaultArgs,
@@ -194,7 +194,7 @@ export function buildDataModelFiles() {
 		}
 	}
 	
-	const outputDir = "/Models";
+	const outputDir = "/models";
 	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
 	const path = fileOutputPath + outputDir;
 	if (!pathExists(path)) {
@@ -248,6 +248,7 @@ export function buildGqlFiles() {
 	writeFileWithExistsCheck(path + '/resolvers' + defaultFileExtension,templateBuilder(gqlResolverArgs));
 
 	dataModel.dataObjects.forEach((object) => {
+	
 		const typeResolverArgs = {
 			...defaultArgs,
 			template: templateTypeResolver,
@@ -259,8 +260,8 @@ export function buildGqlFiles() {
 		}
 		
 		// const objectPath = normalizePath(__dirname + path + `${object.name}`);
-		const objectPath = path + `${object.name}`;
-		if (!pathExists(path)) {
+		const objectPath = path + `/${object.name}`;
+		if (!pathExists(objectPath)) {
 			mkdirp(objectPath);
 		}
 
@@ -270,7 +271,7 @@ export function buildGqlFiles() {
 			...defaultArgs,
 			template: templateTypeDef,
 			templateDictionary: dictionaryTypeDef,
-			objectModelInfo: {
+			dataModelInfo: {
 				objectName: object.name,
 				objectSchema: object.schema
 			}
@@ -300,13 +301,30 @@ export function buildInterfaceFiles() {
 		mkdirp(path);
 	}
 
-	const templates = [{template: templateOrmAdapterInterface, fileName: 'IOrmAdapter'}, {template: templateServerInterface, fileName: 'IServer'}, {template: templateDefinitionInterface, fileName: 'IDefinition'}, {template: templateGqlResolverContextInterface, fileName: 'IResolverContext'}, {template: templateGqlResolverMapInterface, fileName: 'IResolverMap'}]
-	templates.forEach((entry) => {
+	const classTemplates = [{template: templateOrmAdapterInterface, fileName: 'IOrmAdapter'}, {template: templateServerInterface, fileName: 'IServer'}]
+	classTemplates.forEach((entry) => {
 		const args = {
 			...defaultArgs,
 			template: entry.template
 		}
-		writeFileWithExistsCheck(path + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
+		const classFilesPath = path + "/class";
+		if (!pathExists(classFilesPath)) {
+			mkdirp(classFilesPath);
+		}
+		writeFileWithExistsCheck(classFilesPath + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
+	})
+
+	const gqlTemplates = [{template: templateDefinitionInterface, fileName: 'IDefinition'}, {template: templateGqlResolverContextInterface, fileName: 'IResolverContext'}, {template: templateGqlResolverMapInterface, fileName: 'IResolverMap'}]
+	gqlTemplates.forEach((entry) => {
+		const args = {
+			...defaultArgs,
+			template: entry.template
+		}
+		const gqlFilesPath = path + "/gql";
+		if (!pathExists(gqlFilesPath)) {
+			mkdirp(gqlFilesPath);
+		}
+		writeFileWithExistsCheck(gqlFilesPath + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
 	})
 
 	dataModel.dataObjects.forEach((object) => {
@@ -321,10 +339,10 @@ export function buildInterfaceFiles() {
 		}
 		// const objectPath = normalizePath(__dirname + path + '/models');
 		const objectPath = path + '/models';
-		if (!pathExists(path)) {
+		if (!pathExists(objectPath)) {
 			mkdirp(objectPath);
 		}
 
-		writeFileWithExistsCheck(objectPath + `/${object.name}` + defaultFileExtension, templateBuilder(args));
+		writeFileWithExistsCheck(objectPath + `/I${object.name}` + defaultFileExtension, templateBuilder(args));
 	})
 }

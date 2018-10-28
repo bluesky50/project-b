@@ -1,7 +1,7 @@
 export const templateTokenHelpers = 
 `import _ from 'lodash';
 import jwt from 'jsonwebtoken';
-import IUser from '../interfaces/IUser';
+import IUser from '../interfaces/models/IUser';
 // import bcrypt from 'bcrypt';
 import { AUTH_TOKEN_SECRET, REFRESH_SECRET } from '../configs/secrets';
 

@@ -1,11 +1,11 @@
 import * as Builder from '../builders/buildServerFiles';
 
 
-// Builder.buildClasseFiles();
-// Builder.buildConfigFiles();
-// Builder.buildLibFiles();
-// Builder.buildUtilFiles();
+Builder.buildClasseFiles();
+Builder.buildConfigFiles();
+Builder.buildLibFiles();
+Builder.buildUtilFiles();
 
 Builder.buildGqlFiles();
-// Builder.buildInterfaceFiles();
-// Builder.buildDataModelFiles();
+Builder.buildInterfaceFiles();
+Builder.buildDataModelFiles();

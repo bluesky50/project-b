@@ -54,7 +54,7 @@ function getObjectName(args: IArgs) {
 }
 
 function getObjectProperties(args: IArgs) {
-	return dynamicHandler(args, dictionaryResolver['PARTIAL:OBJECT_PROPERTY_ENTRY'], '\n');
+	return dynamicHandler(args, dictionaryResolver['PARTIAL:OBJECT_PROPERTY_ENTRY'], ',\n');
 }
 
 function dynamicHandler(args: IArgs, customTemplate: string, joinChar: string) {

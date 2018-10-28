@@ -1,14 +1,8 @@
 export const templateOrmAdapterClass = 
 `import mongoose from 'mongoose';
 
-import Comment from '../models/Comment';
-import Permission from '../models/Permission';
-import Post from '../models/Post';
-import Role from '../models/Role';
-import User from '../models/User';
-
 import debug from '../lib/debugger';
-import IOrmAdapter from '../interfaces/IOrmAdapter';
+import IOrmAdapter from '../interfaces/class/IOrmAdapter';
 
 export class OrmAdapter implements IOrmAdapter {
 	public dbUrl: string;
@@ -17,11 +11,7 @@ export class OrmAdapter implements IOrmAdapter {
 	constructor(dbUrl = '') {
 		this.dbUrl = dbUrl;
 		this.models = {
-			Comment,
-			Permission,
-			Post,
-			Role,
-			User
+
 		}
 	}
 

@@ -47,8 +47,10 @@ function modifyPropertyType(type: string): string {
 }
 
 function dynamicHandler(args: IArgs, customTemplate: string, joinChar: string) {
+	
 	let cache: string[] = [];
-	Object.entries(args.dataModelInfo.objectSchema).forEach(([key, value]) => {
+	for (const [key, value] of Object.entries(args.dataModelInfo.objectSchema)) {
+		
 		const newDict = {
 			'VAR:PROPERTY_NAME': key,
 			'VAR:PROPERTY_TYPE': modifyPropertyType(value)
@@ -63,8 +65,8 @@ function dynamicHandler(args: IArgs, customTemplate: string, joinChar: string) {
 		} 
 		const completedImportTemplate = templateBuilder(newArgs);
 		cache.push(completedImportTemplate);
-	});
-	
+	}
+
 	return cache.join(joinChar);
 }
 

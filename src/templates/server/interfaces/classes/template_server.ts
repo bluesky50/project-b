@@ -1,8 +1,8 @@
 export const templateServerInterface =
 `interface IServer {
-	app;
-	ormAdapter;
-	httpServer;
+	app: any;
+	ormAdapter: any;
+	httpServer: any;
 	run(): void;
 	close(): void;
 }
