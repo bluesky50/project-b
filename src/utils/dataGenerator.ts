@@ -33,8 +33,8 @@ export function createDataObjectsConfigString(objectNames: string[], defaultObje
 
 	return uniqueObjectNames.map((name: string): string => {
 		return `{
-			objectName: "${name}",
-			objectSchema: ${defaultObjectProperties}
+			name: "${name}",
+			schema: ${defaultObjectProperties}
 		}`;
 	}).join(', ');
 }

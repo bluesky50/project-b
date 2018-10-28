@@ -50,10 +50,10 @@ export function fileExists(pathString: string): boolean {
 export function mkdirp(filePath: string): void {
 	const dirname = path.dirname(filePath);
 
-	if(!fileExists(filePath)) {
+	if(!fileExists(dirname)) {
 		mkdirp(dirname);
 	}
-
+	
 	fs.mkdirSync(filePath);
 }
 

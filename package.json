@@ -6,7 +6,7 @@
   "scripts": {
 	"build-data-config": "ts-node src/builders/buildDataConfigFile.ts",
 	"build-server-config": "",
-	"build-server": ""
+	"build-server": "ts-node src/scripts/server.ts"
   },
   "devDependencies": {
     "@types/node": "^10.12.0",

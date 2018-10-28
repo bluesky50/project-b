@@ -4,7 +4,7 @@ const dataModelConfig = {
 		ormAdapter: 'mongoose'
 	},
 	dataObjects: [{
-		Post: "Post",
+		name: "Post",
 		schema: {
 			updatedAt: 'ObjectId',
 			title: 'String',
@@ -14,7 +14,7 @@ const dataModelConfig = {
 			tags: '[String]',
 		}
 	}, {
-		Comment: "Comment",
+		name: "Comment",
 		schema: {
 			updatedAt: 'ObjectId',
 			title: 'String',
@@ -24,7 +24,7 @@ const dataModelConfig = {
 			tags: '[String]',
 		}
 	}, {
-		User: "User",
+		name: "User",
 		schema: {
 			updatedAt: 'ObjectId',
 			title: 'String',

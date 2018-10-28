@@ -28,39 +28,303 @@ import { templateGqlResolverContextInterface } from '../templates/server/interfa
 import { templateGqlResolverMapInterface } from '../templates/server/interfaces/gql/template_resolver_map';
 import { templateObjectInterface, dictionaryObjectInterface } from '../templates/server/interfaces/objects/template_object_interface';
 
-// Other Templates
+// Lib Templates
 import { templateDebugger } from '../templates/server/other/template_debugger';
 import { templateErrors } from '../templates/server/other/template_errors';
-import { templateInitServerHelpers } from '../templates/server/other/template_init_server_helpers';
 import { templateMiddleware } from '../templates/server/other/template_middleware';
+
+// Util Templates
+import { templateInitServerHelpers } from '../templates/server/other/template_init_server_helpers';
 import { templateResolverHelpers } from '../templates/server/other/template_resolver_helpers';
 import { templateServerHelpers } from '../templates/server/other/template_server_helper';
 import { templateTokenHelpers } from '../templates/server/other/template_token_helpers';
 
-const defaultArgs: IArgs = {
-	template: '',
-	templateDictionary: {},
-	appInfo: {
-		serverInfo,
-		dataModel
-	},
-	dataModelInfo: {
-		objectName: '',
-		objectSchema: {}
-	}
-}
+import { writeFileWithExistsCheck, mkdirp, pathExists, normalizePath } from '../utils/fileUtils';
+/**
+ * Template Building Functions for files that do not rely on data model objects.
+ * - Classes
+ * - Configs
+ * - Lib
+ * - Utils
+ */
 
-function buildClasses() {
-	const classTemplates = [templateServerClass, templateOrmAdapterClass];
-	classTemplates.forEach((template) => {
+const fileOutputPath = './output/src';
+const defaultFileExtension = '.ts';
+
+export function buildClasseFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null, // Dictionary not required for class files
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+
+	const outputDir = '/Classes';
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const classTemplates = [{template:templateServerClass, fileName: 'Server'}, {template:templateOrmAdapterClass, fileName: 'OrmAdapter'}];
+	classTemplates.forEach((entry) => {
 		const args = {
 			...defaultArgs,
-			template
+			template: entry.template
 		};
-		templateBuilder(args);
+		writeFileWithExistsCheck(path + `/${entry.fileName}` + defaultFileExtension,templateBuilder(args));
 	});
 }
 
-function buildConfigs() {
+export function buildConfigFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null, // Dictionary not required for class files
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
 
+	const outputDir = '/Config';
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const secretsConfigArgs = {
+		...defaultArgs,
+		template: templateSecrets
+	}
+
+	writeFileWithExistsCheck(path + '/secrets' + defaultFileExtension,templateBuilder(secretsConfigArgs));
+
+	const serverConfigArgs = {
+		...defaultArgs,
+		template: templateServerConfig,
+		templateDictionary: dictionaryServerConfig
+	}
+	writeFileWithExistsCheck(path + '/serverConfig' + defaultFileExtension, templateBuilder(serverConfigArgs));
+}
+
+export function buildLibFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null, // Dictionary not required for class files
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+
+	const outputDir = '/lib';
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const libTemplates = [{template: templateDebugger, fileName: 'debugger'}, {template: templateErrors, fileName: 'errors'}, {template: templateMiddleware, fileName: 'middleware'}];
+	libTemplates.forEach((entry) => {
+		const args = {
+			...defaultArgs,
+			template: entry.template
+		}
+		writeFileWithExistsCheck(path + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
+	});
+}
+
+export function buildUtilFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null, // Dictionary not required for class files
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+
+	const outputDir = '/Utils'
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const utilTemplates = [{template: templateInitServerHelpers, fileName: 'initServerHelpers'}, {template: templateResolverHelpers, fileName: 'resolverHelpers'}, {template: templateServerHelpers, fileName: 'serverHelpers'}, {template: templateTokenHelpers, fileName: 'tokenHelpers'}];
+	utilTemplates.forEach((entry) => {
+		const args = {
+			...defaultArgs,
+			template: entry.template
+		};
+		writeFileWithExistsCheck(path + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
+	});
+}
+
+export function buildDataModelFiles() {
+	const defaultArgs: IArgs = {
+		template: templateMongooseModel,
+		templateDictionary: dictionaryMongooseModel,
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+	
+	const outputDir = "/Models";
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	dataModel.dataObjects.forEach((object) => {
+		const args = {
+			...defaultArgs,
+			dataModelInfo: {
+				objectName: object.name,
+				objectSchema: object.schema
+			}
+		}
+		writeFileWithExistsCheck(path + `/${object.name}` + defaultFileExtension, templateBuilder(args));
+	});
+}
+
+export function buildGqlFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null,
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+
+	const outputDir = "/gql";
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const gqlSchemaMapArgs = {
+		...defaultArgs,
+		template: templateGqlSchemaMap,
+		templateDictionary: dictionaryGqlSchemaMap
+	}
+	writeFileWithExistsCheck(path + "/schema" + defaultFileExtension,templateBuilder(gqlSchemaMapArgs));
+
+	const gqlResolverArgs = {
+		...defaultArgs,
+		template: templateResolvers,
+	}
+	writeFileWithExistsCheck(path + '/resolvers' + defaultFileExtension,templateBuilder(gqlResolverArgs));
+
+	dataModel.dataObjects.forEach((object) => {
+		const typeResolverArgs = {
+			...defaultArgs,
+			template: templateTypeResolver,
+			templateDictionary: dictionaryResolver,
+			dataModelInfo: {
+				objectName: object.name,
+				objectSchema: object.schema
+			}
+		}
+		
+		// const objectPath = normalizePath(__dirname + path + `${object.name}`);
+		const objectPath = path + `${object.name}`;
+		if (!pathExists(path)) {
+			mkdirp(objectPath);
+		}
+
+		writeFileWithExistsCheck(objectPath + '/typeDef' + defaultFileExtension, templateBuilder(typeResolverArgs));
+
+		const typeDefArgs = {
+			...defaultArgs,
+			template: templateTypeDef,
+			templateDictionary: dictionaryTypeDef,
+			objectModelInfo: {
+				objectName: object.name,
+				objectSchema: object.schema
+			}
+		}
+		writeFileWithExistsCheck(objectPath + '/resolvers' + defaultFileExtension, templateBuilder(typeDefArgs));
+	});
+}
+
+export function buildInterfaceFiles() {
+	const defaultArgs: IArgs = {
+		template: '',
+		templateDictionary: null,
+		appInfo: {
+			serverInfo,
+			dataModel
+		},
+		dataModelInfo: { // Data model info not required for class files, only used for rendering of specific object templates
+			objectName: '',
+			objectSchema: {}
+		}
+	}
+	
+	const outputDir = '/interfaces';
+	// const path = normalizePath(__dirname + fileOutputPath + outputDir);
+	const path = fileOutputPath + outputDir;
+	if (!pathExists(path)) {
+		mkdirp(path);
+	}
+
+	const templates = [{template: templateOrmAdapterInterface, fileName: 'IOrmAdapter'}, {template: templateServerInterface, fileName: 'IServer'}, {template: templateDefinitionInterface, fileName: 'IDefinition'}, {template: templateGqlResolverContextInterface, fileName: 'IResolverContext'}, {template: templateGqlResolverMapInterface, fileName: 'IResolverMap'}]
+	templates.forEach((entry) => {
+		const args = {
+			...defaultArgs,
+			template: entry.template
+		}
+		writeFileWithExistsCheck(path + `/${entry.fileName}` + defaultFileExtension, templateBuilder(args));
+	})
+
+	dataModel.dataObjects.forEach((object) => {
+		const args = {
+			...defaultArgs,
+			template: templateObjectInterface,
+			templateDictionary: dictionaryObjectInterface,
+			dataModelInfo: {
+				objectName: object.name,
+				objectSchema: object.schema
+			}
+		}
+		// const objectPath = normalizePath(__dirname + path + '/models');
+		const objectPath = path + '/models';
+		if (!pathExists(path)) {
+			mkdirp(objectPath);
+		}
+
+		writeFileWithExistsCheck(objectPath + `/${object.name}` + defaultFileExtension, templateBuilder(args));
+	})
 }

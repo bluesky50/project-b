@@ -39,7 +39,7 @@ export function templateBuilder(args: { template: string, templateDictionary: an
 					break;
 				case TYPE_DYNAMIC:
 					// pass necessary args down to the function so that it knows what to do about the data.
-					const dynamicInjectString = args.templateDictionary[insert](args);
+					const dynamicInjectString = args.templateDictionary[insertText](args);
 					resultString = resultString.replace(new RegExp(insert, 'g'), dynamicInjectString)
 					break;
 				default:
